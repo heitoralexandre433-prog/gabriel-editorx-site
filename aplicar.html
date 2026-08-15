@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gabriel.editorx — Solicitar análise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2EDE3;--ink:#1B1814;--ink-soft:#6B5D4F;--ink-faint:rgba(27,24,20,0.32);
+  --green:#1C5E4E;--green-deep:#13473B;--line:rgba(27,24,20,0.14);
+  --font:'Poppins',sans-serif;--serif:'Fraunces',serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{background:var(--paper);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.4;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.5 0 0 0 0 0.4 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+body::after{content:'';position:fixed;top:-12%;left:50%;transform:translateX(-50%);width:min(1100px,100vw);height:720px;pointer-events:none;z-index:0;background:radial-gradient(ellipse at center,rgba(28,94,78,0.05),transparent 64%);}
+
+#page-veil{position:fixed;inset:0;background:var(--paper);z-index:9999;pointer-events:none;opacity:0;transition:opacity .42s ease;animation:veilOut .55s ease;}
+@keyframes veilOut{from{opacity:1;}to{opacity:0;}}
+#page-veil.leaving{opacity:1;pointer-events:all;}
+
+.navbar{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 6vw;backdrop-filter:blur(8px);background:rgba(242,237,227,0.72);border-bottom:0.5px solid var(--line);}
+.nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;}
+.nav-logo .logo-mark{width:30px;height:30px;display:block;flex-shrink:0;}
+.nav-logo .nav-name{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:-0.01em;color:var(--ink);}
+.nav-logo .nav-name .d{color:var(--green);}
+.nav-back{font-size:14px;color:var(--ink-soft);text-decoration:none;font-weight:500;transition:color .2s;display:inline-flex;align-items:center;gap:6px;}
+.nav-back:hover{color:var(--green);}
+
+.wrap{max-width:620px;margin:0 auto;padding:150px 6vw 90px;position:relative;z-index:2;}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:0.26em;text-transform:uppercase;color:var(--green);margin-bottom:16px;}
+.lead{font-family:var(--font);font-size:clamp(24px,3.6vw,38px);font-weight:600;line-height:1.08;letter-spacing:-0.02em;color:var(--ink);margin-bottom:40px;}
+.lead .green{color:var(--green);}
+
+.progress{margin-bottom:32px;}
+.progress-bar{height:3px;background:rgba(27,24,20,0.1);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--green);width:16.66%;transition:width .45s cubic-bezier(.4,0,.2,1);border-radius:2px;}
+.progress-text{font-size:12px;color:var(--ink-soft);margin-top:11px;letter-spacing:0.05em;font-weight:400;}
+
+.steps{min-height:150px;}
+.step{display:none;}
+.step.active{display:block;animation:stepIn .42s cubic-bezier(.4,0,.2,1);}
+@keyframes stepIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+.q{font-family:var(--font);font-size:clamp(18px,2.4vw,24px);font-weight:600;color:var(--ink);line-height:1.2;margin-bottom:18px;letter-spacing:-0.01em;}
+.fi{width:100%;background:transparent;border:none;border-bottom:1.5px solid rgba(27,24,20,0.16);padding:4px 0 14px;font-family:var(--font);font-size:clamp(16px,1.9vw,19px);font-weight:400;color:var(--ink);outline:none;transition:border-color .25s;}
+.fi:focus{border-color:var(--green);}
+.fi::placeholder{color:var(--ink-faint);font-weight:300;}
+textarea.fi{resize:none;height:90px;line-height:1.5;}
+.rr{display:flex;gap:8px;flex-wrap:wrap;}
+.rb{padding:11px 20px;background:transparent;border:1px solid rgba(27,24,20,0.18);border-radius:999px;font-family:var(--font);font-size:15px;font-weight:400;color:var(--ink-soft);cursor:pointer;transition:.2s;}
+.rb.on,.rb:hover{border-color:var(--ink);background:var(--ink);color:var(--paper);}
+.sub{display:none;margin-top:16px;padding-left:16px;border-left:2px solid rgba(27,24,20,0.14);}
+.sub.show{display:block;animation:stepIn .35s ease;}
+
+.nav-row{display:flex;align-items:center;gap:14px;margin-top:30px;}
+.back-btn{background:transparent;border:none;color:var(--ink-soft);font-family:var(--font);font-size:15px;font-weight:400;cursor:pointer;padding:12px 6px;transition:color .2s;}
+.back-btn:hover{color:var(--ink);}
+.btn-sub{flex:1;background:var(--ink);color:var(--paper);border:none;border-radius:999px;padding:18px;font-family:var(--font);font-size:15px;font-weight:500;cursor:pointer;transition:.25s;letter-spacing:0.01em;}
+.btn-sub:hover{background:var(--green);}
+.trust{margin-top:20px;font-size:13px;color:var(--ink-soft);text-align:center;font-weight:300;}
+
+.thanks{display:none;flex-direction:column;align-items:flex-start;gap:18px;padding-top:10px;}
+.thanks.show{display:flex;}
+.thanks .tk-ic{width:60px;height:60px;border-radius:50%;background:var(--green);color:var(--paper);display:flex;align-items:center;justify-content:center;font-size:30px;}
+.thanks h3{font-family:var(--font);font-size:clamp(24px,4vw,34px);font-weight:600;color:var(--ink);line-height:1.08;letter-spacing:-0.02em;}
+.thanks p{font-size:16px;line-height:1.6;color:var(--ink-soft);max-width:420px;font-weight:300;}
+
+@media(max-width:600px){
+  .wrap{padding:120px 5vw 70px;}
+  .navbar{padding:14px 5vw;}
+  .nav-logo .nav-name{font-size:16px;}
+  .nav-logo .logo-mark{width:26px;height:26px;}
+  .nav-back{font-size:13px;}
+}
+</style>
+</head>
+<body>
+<div id="page-veil"></div>
+
+<nav class="navbar">
+  <a class="nav-logo" href="index.html"><svg class="logo-mark" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#1B1814" d="M 124.63,134.06 L 124.52,134.73 L 124.32,135.37 L 124.04,135.97 L 123.68,136.52 L 123.24,137.00 L 122.76,137.42 L 122.22,137.75 L 121.65,138.01 L 121.06,138.18 L 120.45,138.27 L 119.83,138.27 L 119.08,138.18 L 118.10,137.93 L 117.17,137.56 L 116.31,137.06 L 115.53,136.46 L 114.85,135.76 L 114.27,134.97 L 113.82,134.12 L 113.48,133.22 L 113.28,132.29 L 113.20,131.34 L 113.20,131.08 L 113.35,129.48 L 113.73,127.90 L 114.32,126.40 L 115.12,124.99 L 116.11,123.72 L 117.26,122.60 L 118.55,121.65 L 119.97,120.89 L 121.47,120.34 L 123.03,120.01 L 124.65,119.90 L 125.98,119.95 L 127.99,120.21 L 130.60,120.89 L 133.08,121.95 L 135.38,123.36 L 137.44,125.08 L 139.23,127.07 L 140.71,129.30 L 141.86,131.71 L 142.64,134.24 L 143.05,136.86 L 143.12,138.18 L 143.07,139.95 L 142.49,144.32 L 141.28,148.55 L 139.46,152.54 L 137.11,156.20 L 134.27,159.47 L 131.00,162.29 L 127.39,164.60 L 123.51,166.37 L 119.44,167.57 L 115.26,168.18 L 113.16,168.27 L 110.34,168.17 L 103.34,167.20 L 96.58,165.23 L 90.21,162.34 L 84.34,158.58 L 79.09,154.04 L 74.56,148.84 L 70.83,143.07 L 67.95,136.87 L 65.99,130.36 L 64.95,123.65 L 64.79,120.27 L 64.91,115.73 L 66.39,104.42 L 69.47,93.48 L 74.08,83.14 L 80.10,73.60 L 87.39,65.05 L 95.78,57.65 L 105.06,51.47 L 115.02,46.48 L 125.58,42.97 L 136.54,40.99 L 145.02,40.54 L 144.75,25.00 L 131.57,25.95 L 118.52,28.79 L 106.01,33.46 L 94.29,39.85 L 83.79,48.08 L 74.61,57.69 L 66.92,68.48 L 60.86,80.21 L 56.54,92.64 L 54.03,105.52 L 53.34,115.31 L 53.35,118.48 L 54.10,126.92 L 56.05,135.04 L 59.14,142.77 L 63.30,149.95 L 68.43,156.43 L 74.41,162.09 L 81.12,166.81 L 88.39,170.51 L 96.09,173.13 L 104.05,174.62 L 110.09,175.00 L 114.68,174.83 L 119.75,173.96 L 124.62,172.38 L 129.19,170.12 L 133.37,167.25 L 137.08,163.82 L 140.25,159.91 L 142.83,155.62 L 144.76,151.02 L 146.03,146.22 L 146.62,141.31 L 146.65,138.87 L 146.37,135.71 L 145.65,132.67 L 144.51,129.76 L 142.97,127.06 L 141.06,124.60 L 138.84,122.44 L 136.34,120.62 L 133.61,119.17 L 130.71,118.12 L 127.70,117.48 L 124.65,117.27 L 123.15,117.35 L 121.21,117.70 L 119.34,118.34 L 117.58,119.23 L 115.97,120.37 L 114.55,121.72 L 113.34,123.26 L 112.36,124.96 L 111.64,126.78 L 111.19,128.68 L 111.01,130.62 L 111.01,131.08 L 111.18,132.67 L 111.52,133.87 L 112.04,135.01 L 112.70,136.06 L 113.52,137.00 L 114.45,137.80 L 115.49,138.45 L 116.60,138.94 L 117.76,139.27 L 118.95,139.42 L 119.83,139.42 L 120.79,139.28 L 121.85,138.89 L 122.79,138.30 L 123.56,137.52 L 124.14,136.61 L 124.51,135.61 L 124.64,134.57 L 124.63,134.06 Z"/><circle cx="124.63" cy="134.06" r="9" fill="#1C5E4E"/></svg><span class="nav-name">gabriel<span class="d">.</span>editorx</span></a>
+  <a class="nav-back" href="index.html">← Voltar ao site</a>
+</nav>
+
+<div class="wrap">
+  <div class="eyebrow">Solicitar análise</div>
+  <h1 class="lead">Me mostra seu conteúdo.<br>Eu te mostro o que <span class="green">te apaga.</span></h1>
+
+  <div id="form">
+    <div class="progress">
+      <div class="progress-bar"><div class="progress-fill" id="pfill"></div></div>
+      <div class="progress-text" id="ptext">1 de 6</div>
+    </div>
+
+    <div class="steps">
+      <div class="step active" data-step="1">
+        <div class="q">Nome completo</div>
+        <input class="fi" id="nome" placeholder="Seu nome">
+      </div>
+      <div class="step" data-step="2">
+        <div class="q">WhatsApp</div>
+        <input class="fi" id="whatsapp" placeholder="(00) 00000-0000">
+      </div>
+      <div class="step" data-step="3">
+        <div class="q">Tipo de usuário</div>
+        <div class="rr" id="tipousuario">
+          <div class="rb" onclick="pickUser(this)">Criador de Conteúdo</div>
+          <div class="rb" onclick="pickUser(this)">Empresa</div>
+          <div class="rb" onclick="pickUser(this)">Outro</div>
+        </div>
+        <div class="sub" id="sub-criador">
+          <div class="rr">
+            <div class="rb" onclick="pickSub(this)">YouTube</div>
+            <div class="rb" onclick="pickSub(this)">Instagram</div>
+            <div class="rb" onclick="pickSub(this)">TikTok</div>
+            <div class="rb" onclick="pickSub(this)">Outro</div>
+          </div>
+        </div>
+      </div>
+      <div class="step" data-step="4">
+        <div class="q">Tipo de vídeo</div>
+        <div class="rr" id="tipovideo">
+          <div class="rb" onclick="pickVideo(this)">Vídeos curtos</div>
+          <div class="rb" onclick="pickVideo(this)">VSL</div>
+          <div class="rb" onclick="pickVideo(this)">Vídeos para o YouTube</div>
+        </div>
+        <div class="sub" id="sub-curtos">
+          <div class="rr">
+            <div class="rb" onclick="pickSub(this)">Reels</div>
+            <div class="rb" onclick="pickSub(this)">Shorts</div>
+            <div class="rb" onclick="pickSub(this)">TikTok</div>
+          </div>
+        </div>
+      </div>
+      <div class="step" data-step="5">
+        <div class="q">Como me encontrou</div>
+        <div class="rr" id="origem">
+          <div class="rb" onclick="pick(this)">Instagram</div>
+          <div class="rb" onclick="pick(this)">TikTok</div>
+          <div class="rb" onclick="pick(this)">Indicação</div>
+          <div class="rb" onclick="pick(this)">Outro</div>
+        </div>
+      </div>
+      <div class="step" data-step="6">
+        <div class="q">Descrição do projeto</div>
+        <textarea class="fi" id="mensagem" placeholder="Me conta sobre seu canal, sua audiência e o que você quer comunicar..."></textarea>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="back-btn" id="backBtn" onclick="prevStep()">← Voltar</button>
+      <button class="btn-sub" id="nextBtn" onclick="nextStep()">Continuar →</button>
+    </div>
+    <p class="trust">Sem compromisso. Suas informações ficam só comigo.</p>
+  </div>
+
+  <div class="thanks" id="thanks">
+    <div class="tk-ic">✓</div>
+    <h3>Candidatura recebida.</h3>
+    <p>Seu perfil entrou para a nossa seleção. Os selecionados recebem retorno em até 24 horas.</p>
+  </div>
+</div>
+
+<script>
+var current=1, total=6;
+function showStep(n){
+  document.querySelectorAll('.step').forEach(function(s){s.classList.remove('active');});
+  var el=document.querySelector('.step[data-step="'+n+'"]');
+  el.classList.add('active');
+  document.getElementById('pfill').style.width=(n/total*100)+'%';
+  document.getElementById('ptext').textContent=n+' de '+total;
+  document.getElementById('backBtn').style.visibility=(n===1)?'hidden':'visible';
+  document.getElementById('nextBtn').textContent=(n===total)?'Quero meu raio-X →':'Continuar →';
+  var inp=el.querySelector('input,textarea');
+  if(inp){setTimeout(function(){inp.focus();},60);}
+}
+function nextStep(){
+  if(current===1 && !document.getElementById('nome').value.trim()){document.getElementById('nome').focus();return;}
+  if(current===2 && !document.getElementById('whatsapp').value.trim()){document.getElementById('whatsapp').focus();return;}
+  if(current<total){current++;showStep(current);}
+  else{enviar();}
+}
+function prevStep(){if(current>1){current--;showStep(current);}}
+
+function pick(el){document.querySelectorAll('#origem .rb').forEach(function(b){b.classList.remove('on');});el.classList.add('on');}
+function pickSub(el){el.parentElement.querySelectorAll('.rb').forEach(function(b){b.classList.remove('on');});el.classList.add('on');}
+function pickUser(el){
+  document.querySelectorAll('#tipousuario .rb').forEach(function(b){b.classList.remove('on');});
+  el.classList.add('on');
+  var sub=document.getElementById('sub-criador');
+  if(el.textContent.trim()==='Criador de Conteúdo'){sub.classList.add('show');}
+  else{sub.classList.remove('show');sub.querySelectorAll('.rb').forEach(function(b){b.classList.remove('on');});}
+}
+function pickVideo(el){
+  document.querySelectorAll('#tipovideo .rb').forEach(function(b){b.classList.remove('on');});
+  el.classList.add('on');
+  var sub=document.getElementById('sub-curtos');
+  if(el.textContent.trim()==='Vídeos curtos'){sub.classList.add('show');}
+  else{sub.classList.remove('show');sub.querySelectorAll('.rb').forEach(function(b){b.classList.remove('on');});}
+}
+function enviar(){
+  document.getElementById('form').style.display='none';
+  document.getElementById('thanks').classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+['nome','whatsapp'].forEach(function(id){
+  document.getElementById(id).addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();nextStep();}});
+});
+showStep(1);
+</script>
+<script>
+(function(){
+  var veil=document.getElementById('page-veil');
+  window.__leave=function(url){ if(veil){veil.classList.add('leaving');} setTimeout(function(){window.location.href=url;},380); };
+  window.addEventListener('pageshow',function(){ if(veil){veil.classList.remove('leaving');} });
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a[href]'); if(!a) return;
+    var h=a.getAttribute('href');
+    if(h && h.split('#')[0].endsWith('.html') && !a.target){ e.preventDefault(); window.__leave(h); }
+  });
+})();
+</script>
+</body>
+</html>
